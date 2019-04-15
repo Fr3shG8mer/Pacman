@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
+/**************************************************/
 import com.qualitype.pacman.Board;
 import com.qualitype.pacman.Direction;
 import com.qualitype.pacman.Ghosts;
@@ -20,7 +21,7 @@ public class BoardControl extends Canvas {
 
 	private static final int WIDTH_TILE = 15;
 	private static final int HEIGHT_TILE = 15;
-	private static final int BORDER_TOP = 10;
+	private static final int BORDER_TOP = 30;
 	private static final int BORDER_LEFT = 10;
 	static final int FRAMES = 4;
 
@@ -53,12 +54,11 @@ public class BoardControl extends Canvas {
 	public void paintControl(PaintEvent event) {
 		if (this.board == null) return;
 
-		// final Display display = new Display();
-		// final Shell shell = new Shell(display);
 		final GC gc = event.gc;
-
 		gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
+
+		gc.drawText("Score: " + this.board.getPacman().getScore(), 1, 0, true);
 
 		gc.fillRectangle(BORDER_LEFT, BORDER_TOP, this.board.getWidth() * WIDTH_TILE,
 				this.board.getHeight() * HEIGHT_TILE);

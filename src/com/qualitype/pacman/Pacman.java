@@ -1,6 +1,7 @@
 package com.qualitype.pacman;
 
 public class Pacman {
+	int score = 0;
 	int x = 1; // Evtl. Änderung
 	int y = 1; // Evtl. Änderung
 	Direction direction = Direction.RIGHT;
@@ -40,4 +41,7 @@ public class Pacman {
 		this.life = life;
 	}
 
+	public int getScore() {
+		return this.score;
+	}
 }
