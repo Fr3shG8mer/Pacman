@@ -12,24 +12,26 @@ import org.eclipse.swt.widgets.Composite;
 /**************************************************/
 import com.qualitype.pacman.Board;
 import com.qualitype.pacman.Direction;
-import com.qualitype.pacman.Ghosts;
+import com.qualitype.pacman.Ghost;
 import com.qualitype.pacman.LittlePill;
 import com.qualitype.pacman.Obstacle;
 import com.qualitype.pacman.Pacman;
+import com.qualitype.pacman.PowerPellet;
+import com.qualitype.pacman.Strawberry;
 
 public class BoardControl extends Canvas {
 
 	private static final int WIDTH_TILE = 15;
 	private static final int HEIGHT_TILE = 15;
+	private static final int HEIGHT_FROM_SOURCE_TILE = 15;
+	private static final int WIDTH_FROM_SOURCE_TILE = 15;
 	private static final int BORDER_TOP = 30;
 	private static final int BORDER_LEFT = 10;
 	static final int FRAMES = 4;
 
 	private Board board;
 	private final Image pacman;
-	// private final Image pacmanUp;
-	// private final Image pacmanDown;
-	// private final Image pacmanLeft;
+	private final Image strawberry;
 
 	private int frame;
 
@@ -37,15 +39,11 @@ public class BoardControl extends Canvas {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 
 		this.pacman = new Image(getDisplay(), "icons/Pacman-TileSet.png");
-		// this.pacmanUp = rotate(this.pacman, Direction.UP);
-		// this.pacmanDown = rotate(this.pacman, Direction.DOWN);
-		// this.pacmanLeft = rotate(this.pacman, Direction.LEFT);
+		this.strawberry = new Image(getDisplay(), "icons/Strawberry_15x15.png");
 
 		addDisposeListener(e -> {
 			this.pacman.dispose();
-			// this.pacmanUp.dispose();
-			// this.pacmanDown.dispose();
-			// this.pacmanLeft.dispose();
+			this.strawberry.dispose();
 		});
 
 		addPaintListener(this::paintControl);
@@ -58,7 +56,12 @@ public class BoardControl extends Canvas {
 		gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
 
-		gc.drawText("Score: " + this.board.getPacman().getScore(), 1, 0, true);
+		String lifePl = "Lifes";
+		if (this.board.getPacman().getLife() == 1) {
+			lifePl = "Life";
+		}
+		gc.drawText("Score: " + this.board.getPacman().getScore() + "		" + this.board.getPacman().getLife() + " "
+				+ lifePl, 1, 0, true);
 
 		gc.fillRectangle(BORDER_LEFT, BORDER_TOP, this.board.getWidth() * WIDTH_TILE,
 				this.board.getHeight() * HEIGHT_TILE);
@@ -69,40 +72,62 @@ public class BoardControl extends Canvas {
 				final int tileX = BORDER_LEFT + x * WIDTH_TILE;
 				final int tileY = BORDER_TOP + y * HEIGHT_TILE;
 
-				final Object gameObject = this.board.getGameObjectOrPacmanOn(x, y);
-				if (gameObject == null) {
-					gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
-					gc.fillRectangle(tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
-				} else {
-					// Pacman
-					if (gameObject instanceof Pacman) {
-						// Pacman Image
-						final Direction direction = this.board.getPacman().getDirection();
-						gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-						gc.drawImage(this.pacman, WIDTH_TILE * direction.getNumber(), HEIGHT_TILE * this.frame,
-								WIDTH_TILE, HEIGHT_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
-					}
-					// LittlePill
-					if (gameObject instanceof LittlePill) {
-						gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-						final int widthPill = WIDTH_TILE / 4;
-						final int heightPill = WIDTH_TILE / 4;
-						gc.fillOval(tileX + (WIDTH_TILE - widthPill) / 2, tileY + (HEIGHT_TILE - heightPill) / 2,
-								widthPill, heightPill);
-					}
-					// Obstacle
-					if (gameObject instanceof Obstacle) {
-						gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
+				for (final Object gameObject : this.board.findGameObjectsAndPacmanOn(x, y)) {
+					if (gameObject == null) {
+						gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
 						gc.fillRectangle(tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
-					}
-					// Ghost
-					if (gameObject instanceof Ghosts) {
-						gc.drawImage(this.pacman, WIDTH_TILE * 4, 0, WIDTH_TILE, HEIGHT_TILE, tileX, tileY, WIDTH_TILE,
-								HEIGHT_TILE);
+					} else {
+						// Pacman
+						if (gameObject instanceof Pacman) {
+							// Pacman
+							final Direction direction = this.board.getPacman().getDirection();
+							gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+							gc.drawImage(this.pacman, WIDTH_TILE * direction.getNumber(), HEIGHT_TILE * this.frame,
+									WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
+									HEIGHT_TILE);
+						}
+						// LittlePill
+						if (gameObject instanceof LittlePill) {
+							gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
+							final int widthPill = WIDTH_TILE / 4;
+							final int heightPill = WIDTH_TILE / 4;
+							gc.fillOval(tileX + (WIDTH_TILE - widthPill) / 2, tileY + (HEIGHT_TILE - heightPill) / 2,
+									widthPill, heightPill);
+						}
+						// Obstacle
+						if (gameObject instanceof Obstacle) {
+							gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
+							gc.fillRectangle(tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
+						}
+						// PowerPellet
+						if (gameObject instanceof PowerPellet) {
+							gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_RED));
+							final int widthPowerPellet = WIDTH_TILE / 2;
+							final int heightPowerPellet = WIDTH_TILE / 2;
+							gc.fillOval(tileX + (WIDTH_TILE - widthPowerPellet) / 2,
+									tileY + (HEIGHT_TILE - heightPowerPellet) / 2, widthPowerPellet, heightPowerPellet);
+						}
+						// Strawberry
+						if (gameObject instanceof Strawberry) {
+							gc.drawImage(this.strawberry, tileX, tileY);
+						}
+						// Ghost
+						if (gameObject instanceof Ghost) {
+							gc.drawImage(this.pacman, WIDTH_TILE * 4, 0, WIDTH_FROM_SOURCE_TILE,
+									HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
+						}
 					}
 				}
 			}
 		}
+
+		if (this.board.isGameOver()) {
+			gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK));
+			gc.setAlpha(100);
+			gc.fillRectangle(BORDER_LEFT, BORDER_TOP, this.board.getWidth() * WIDTH_TILE,
+					this.board.getHeight() * HEIGHT_TILE);
+		}
+
 	}
 
 	Image rotate(Image source, Direction direction) {
