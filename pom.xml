@@ -52,7 +52,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>HelloWorld</mainClass>
+									<mainClass>com.qualitype.pacman.gui.Pacman</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>

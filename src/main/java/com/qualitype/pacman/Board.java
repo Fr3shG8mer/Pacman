@@ -7,7 +7,7 @@ public class Board {
 	int height;
 	boolean gameOver;
 	Pacman pacman;
-	Ghost ghosts;
+	Clyde ghosts;
 	List<GameObject> gameObjects = new ArrayList<>();
 	int tickCount;
 

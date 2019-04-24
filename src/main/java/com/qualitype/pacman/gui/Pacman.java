@@ -10,7 +10,7 @@ import com.qualitype.pacman.Board;
 import com.qualitype.pacman.Direction;
 import com.qualitype.pacman.io.LevelDesign;
 
-public class SWTHelloWorld {
+public class Pacman {
 
 	private static final int SPEED = 250; // in ms
 
@@ -20,10 +20,10 @@ public class SWTHelloWorld {
 		shell.setLayout(new FillLayout());
 
 		final LevelDesign design = new LevelDesign();
-		final Board board = design.readLevel(Board.class.getResourceAsStream("Level-1.txt"));
+		final Board[] board = {design.readLevel(Board.class.getResourceAsStream("Level-1.txt"))};
 
 		final BoardControl control = new BoardControl(shell, SWT.NONE);
-		control.setBoard(board);
+		control.setBoard(board[0]);
 
 		shell.addKeyListener(new KeyListener() {
 
@@ -34,10 +34,17 @@ public class SWTHelloWorld {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (board.isGameOver()) return;
+				if (board[0].isGameOver()) {
+					if (e.keyCode == SWT.CR) {
+						board[0] = design.readLevel(Board.class.getResourceAsStream("Level-1.txt"));
+						control.setBoard(board[0]);
+					}
+					return;
+
+				}
 				final Direction inputDirection = Direction.forUserInput(e.character);
 				if (inputDirection != null) {
-					board.getPacman().setDirection(inputDirection);
+					board[0].getPacman().setDirection(inputDirection);
 				}
 			}
 		});
@@ -52,7 +59,7 @@ public class SWTHelloWorld {
 					try {
 						Thread.sleep(SPEED / BoardControl.FRAMES);
 						final long currentTickTime = System.currentTimeMillis();
-						board.tick(currentTickTime - lastTickTime);
+						board[0].tick(currentTickTime - lastTickTime);
 						control.incrementFrame();
 						refreshControl();
 						lastTickTime = currentTickTime;
@@ -74,7 +81,7 @@ public class SWTHelloWorld {
 		});
 		thread.start();
 
-		shell.setSize(455, 543);
+		shell.setSize(616, 759);
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

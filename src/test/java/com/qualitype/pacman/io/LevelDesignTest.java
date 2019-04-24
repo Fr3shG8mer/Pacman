@@ -45,6 +45,7 @@ public class LevelDesignTest {
 	}
 
 	private static void assertTileHasClass(GameObject gameObject, Class<? extends GameObject> gameObjectClass) {
+		Assert.assertNotNull("Tile is null!", gameObject);
 		Assert.assertTrue("Tile is wrong: " + gameObject, gameObjectClass.isAssignableFrom(gameObject.getClass()));
 	}
 }
