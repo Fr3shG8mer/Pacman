@@ -10,13 +10,13 @@ import com.qualitype.pacman.Blinky;
 import com.qualitype.pacman.BluePortal;
 import com.qualitype.pacman.Board;
 import com.qualitype.pacman.Clyde;
+import com.qualitype.pacman.FruitTimer;
 import com.qualitype.pacman.Inky;
 import com.qualitype.pacman.LittlePill;
 import com.qualitype.pacman.Obstacle;
 import com.qualitype.pacman.OrangePortal;
 import com.qualitype.pacman.Pinky;
 import com.qualitype.pacman.PowerPellet;
-import com.qualitype.pacman.Strawberry;
 
 public class LevelDesign {
 
@@ -63,7 +63,7 @@ public class LevelDesign {
 						result.getGameObjects().add(new PowerPellet(x, y));
 						break;
 					case 'v' :
-						result.getGameObjects().add(new Strawberry(x, y));
+						result.getGameObjects().add(new FruitTimer(x, y));
 						break;
 					case 'C' :
 						result.getGameObjects().add(new Clyde(x, y));

@@ -15,11 +15,6 @@ public class Pinky extends AbstractGhost {
 			int newX = this.lastDirection.getNextX(this.x);
 			int newY = this.lastDirection.getNextY(this.y);
 
-			// moveInDirection(board, this.lastDirection);
-
-			// this.lastDirection = Direction.UP;
-			// moveInDirection(board, this.lastDirection);
-
 			while (!board.canMove(newX, newY)) {
 				this.lastDirection = Direction.random();
 				newX = this.lastDirection.getNextX(this.x);

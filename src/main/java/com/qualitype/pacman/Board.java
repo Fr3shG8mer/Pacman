@@ -10,6 +10,7 @@ public class Board {
 	Clyde ghosts;
 	List<GameObject> gameObjects = new ArrayList<>();
 	int tickCount;
+	public boolean canEatGhosts = false;
 
 	public Board() {
 		this(28, 31);
@@ -22,7 +23,7 @@ public class Board {
 	}
 
 	public void tick(long timeTillLastTick) {
-		for (final GameObject gameObject : this.gameObjects) {
+		for (final GameObject gameObject : this.gameObjects.toArray(new GameObject[this.gameObjects.size()])) {
 			gameObject.tick(this, timeTillLastTick);
 		}
 		if (this.tickCount % 4 == 0) {
@@ -55,6 +56,7 @@ public class Board {
 		if (newY < 0) return false;
 		if (newX > this.width - 1) return false;
 		if (newY > this.height - 1) return false;
+		if (this.gameOver == true) return false;
 		final GameObject gameObject = getGameObjectOn(newX, newY);
 		if (gameObject != null && gameObject.isSolid()) return false;
 		return true;

@@ -13,8 +13,10 @@ public class StrawberryTest {
 		final LevelDesign design = new LevelDesign();
 		final Board board = design.readLevel(getClass().getResourceAsStream("fruits.txt"));
 
+		board.tick(60 * 60 * 1000); // let one hour pass
+
 		Assert.assertNotNull(board);
-		Assert.assertEquals("Width is wrong!", 1, board.getWidth());
+		Assert.assertEquals("Width is wrong!", 2, board.getWidth());
 		Assert.assertEquals("Height is wrong!", 1, board.getHeight());
 
 		assertTileHasClass(board.getGameObjectOn(0, 0), Strawberry.class);

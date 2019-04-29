@@ -5,7 +5,7 @@ public class Pacman {
 	int x = 1; // Evtl. Änderung
 	int y = 1; // Evtl. Änderung
 	Direction direction = Direction.RIGHT;
-	int life = 1;
+	int life = 3;
 	public boolean isOnPosition(int x, int y) {
 		return (this.x == x) && (this.y == y);
 	}

@@ -1,5 +1,8 @@
 package com.qualitype.pacman.gui;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Font;
@@ -16,6 +19,7 @@ import com.qualitype.pacman.BluePortal;
 import com.qualitype.pacman.Board;
 import com.qualitype.pacman.Clyde;
 import com.qualitype.pacman.Direction;
+import com.qualitype.pacman.GhostPlaceholder;
 import com.qualitype.pacman.Inky;
 import com.qualitype.pacman.LittlePill;
 import com.qualitype.pacman.Obstacle;
@@ -37,6 +41,7 @@ public class BoardControl extends Canvas {
 
 	private Board board;
 	private final Image overlay;
+	private final Image obstacle;
 	private final Image pacman;
 	private final Image ghosts;
 	private final Image strawberry;
@@ -48,15 +53,17 @@ public class BoardControl extends Canvas {
 	public BoardControl(Composite parent, int style) {
 		super(parent, style | SWT.DOUBLE_BUFFERED);
 
-		this.overlay = new Image(getDisplay(), "icons/Overlay_20x20.png");
-		this.pacman = new Image(getDisplay(), "icons/Pacman_20x20.png");
-		this.ghosts = new Image(getDisplay(), "icons/Ghosts_20x20.png");
-		this.strawberry = new Image(getDisplay(), "icons/Strawberry_20x20.png");
-		this.portals = new Image(getDisplay(), "icons/Portals_20x20.png");
-		this.youDied = new Image(getDisplay(), "icons/gameOver_20x20.png");
+		this.overlay = createImage("icons/Overlay_20x20.png");
+		this.obstacle = createImage("icons/Obstacle.png");
+		this.pacman = createImage("icons/Pacman_20x20.png");
+		this.ghosts = createImage("icons/Ghosts+Placeholder_20x20.png");
+		this.strawberry = createImage("icons/Strawberry_20x20.png");
+		this.portals = createImage("icons/Portals_20x20.png");
+		this.youDied = createImage("icons/gameOver_20x20.png");
 
 		addDisposeListener(e -> {
 			this.overlay.dispose();
+			this.obstacle.dispose();
 			this.pacman.dispose();
 			this.ghosts.dispose();
 			this.strawberry.dispose();
@@ -65,6 +72,14 @@ public class BoardControl extends Canvas {
 		});
 
 		addPaintListener(this::paintControl);
+	}
+
+	private Image createImage(String imageFile) {
+		try (InputStream input = getClass().getResourceAsStream('/' + imageFile)) {
+			return new Image(getDisplay(), input);
+		} catch (final IOException e) {
+			throw new IllegalArgumentException("Cannot load image " + imageFile);
+		}
 	}
 
 	public void paintControl(PaintEvent event) {
@@ -131,8 +146,9 @@ public class BoardControl extends Canvas {
 						}
 						// Obstacle
 						if (gameObject instanceof Obstacle) {
-							gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
-							gc.fillRectangle(tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
+							gc.drawImage(this.obstacle, tileX, tileY);
+//							gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
+//							gc.fillRectangle(tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
 						}
 						// PowerPellet
 						if (gameObject instanceof PowerPellet) {
@@ -148,24 +164,54 @@ public class BoardControl extends Canvas {
 						}
 						// Blinky
 						if (gameObject instanceof Blinky) {
-							gc.drawImage(this.ghosts, 0, 0, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX,
-									tileY, WIDTH_TILE, HEIGHT_TILE);
+							if (this.board.canEatGhosts == false) {
+								gc.drawImage(this.ghosts, 0, 0, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX,
+										tileY, WIDTH_TILE, HEIGHT_TILE);
+							} else if (this.board.canEatGhosts == true) {
+								gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE * this.frame,
+										WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
+										HEIGHT_TILE);
+							}
 						}
 						// Pinky
 						if (gameObject instanceof Pinky) {
-							gc.drawImage(this.ghosts, 0, HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
-									HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
+							if (this.board.canEatGhosts == false) {
+								gc.drawImage(this.ghosts, 0, HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
+										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
+							} else if (this.board.canEatGhosts == true) {
+								gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE * this.frame,
+										WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
+										HEIGHT_TILE);
+							}
 						}
 						// Inky
 						if (gameObject instanceof Inky) {
-							gc.drawImage(this.ghosts, 0, 3 * HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
-									HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
+							if (this.board.canEatGhosts == false) {
+								gc.drawImage(this.ghosts, 0, 3 * HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
+										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
+							} else if (this.board.canEatGhosts == true) {
+								gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE * this.frame,
+										WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
+										HEIGHT_TILE);
+							}
 						}
 						// Clyde
 						if (gameObject instanceof Clyde) {
-							gc.drawImage(this.ghosts, 0, 2 * HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
+							if (this.board.canEatGhosts == false) {
+								gc.drawImage(this.ghosts, 0, 2 * HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
+										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
+							} else if (this.board.canEatGhosts == true) {
+								gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE * this.frame,
+										WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
+										HEIGHT_TILE);
+							}
+						}
+						// GhostPlaceholder
+						if (gameObject instanceof GhostPlaceholder) {
+							gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE * 2, 0, WIDTH_FROM_SOURCE_TILE,
 									HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
 						}
+						///////
 						// OrangePortal
 						if (gameObject instanceof OrangePortal) {
 							gc.drawImage(this.portals, 0, 0, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX,

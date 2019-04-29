@@ -19,6 +19,7 @@ public class PowerPellet implements GameObject {
 	public void collide(Board board) {
 		board.gameObjects.remove(this);
 		board.pacman.score += 50;
+		board.canEatGhosts = true;
 	}
 
 	@Override
