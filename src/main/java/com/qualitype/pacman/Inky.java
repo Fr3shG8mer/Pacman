@@ -11,6 +11,7 @@ public class Inky extends AbstractGhost {
 
 	@Override
 	public void tick(Board board, long timeTillLastTick) {
+		super.tick(board, timeTillLastTick);
 		if (this.tickCount % 5 == 0) {
 			int newX = this.lastDirection.getNextX(this.x);
 			int newY = this.lastDirection.getNextY(this.y);

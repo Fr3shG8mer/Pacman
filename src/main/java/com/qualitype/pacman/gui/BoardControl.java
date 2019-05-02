@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.qualitype.pacman.Blinky;
 import com.qualitype.pacman.BluePortal;
-/**************************************************/
 import com.qualitype.pacman.Board;
 import com.qualitype.pacman.Clyde;
 import com.qualitype.pacman.Direction;
@@ -164,46 +163,46 @@ public class BoardControl extends Canvas {
 						}
 						// Blinky
 						if (gameObject instanceof Blinky) {
-							if (this.board.canEatGhosts == false) {
-								gc.drawImage(this.ghosts, 0, 0, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX,
-										tileY, WIDTH_TILE, HEIGHT_TILE);
-							} else if (this.board.canEatGhosts == true) {
+							if (((Blinky) gameObject).canEatGhosts()) {
 								gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE * this.frame,
 										WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
 										HEIGHT_TILE);
+							} else {
+								gc.drawImage(this.ghosts, 0, 0, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX,
+										tileY, WIDTH_TILE, HEIGHT_TILE);
 							}
 						}
 						// Pinky
 						if (gameObject instanceof Pinky) {
-							if (this.board.canEatGhosts == false) {
-								gc.drawImage(this.ghosts, 0, HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
-										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
-							} else if (this.board.canEatGhosts == true) {
+							if (((Pinky) gameObject).canEatGhosts()) {
 								gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE * this.frame,
 										WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
 										HEIGHT_TILE);
+							} else {
+								gc.drawImage(this.ghosts, 0, HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
+										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
 							}
 						}
 						// Inky
 						if (gameObject instanceof Inky) {
-							if (this.board.canEatGhosts == false) {
-								gc.drawImage(this.ghosts, 0, 3 * HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
-										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
-							} else if (this.board.canEatGhosts == true) {
+							if (((Inky) gameObject).canEatGhosts()) {
 								gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE * this.frame,
 										WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
 										HEIGHT_TILE);
+							} else {
+								gc.drawImage(this.ghosts, 0, 3 * HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
+										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
 							}
 						}
 						// Clyde
 						if (gameObject instanceof Clyde) {
-							if (this.board.canEatGhosts == false) {
-								gc.drawImage(this.ghosts, 0, 2 * HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
-										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
-							} else if (this.board.canEatGhosts == true) {
+							if (((Clyde) gameObject).canEatGhosts()) {
 								gc.drawImage(this.ghosts, WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE * this.frame,
 										WIDTH_FROM_SOURCE_TILE, HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE,
 										HEIGHT_TILE);
+							} else {
+								gc.drawImage(this.ghosts, 0, 2 * HEIGHT_FROM_SOURCE_TILE, WIDTH_FROM_SOURCE_TILE,
+										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
 							}
 						}
 						// GhostPlaceholder

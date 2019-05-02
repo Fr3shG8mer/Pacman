@@ -10,7 +10,6 @@ public class Board {
 	Clyde ghosts;
 	List<GameObject> gameObjects = new ArrayList<>();
 	int tickCount;
-	public boolean canEatGhosts = false;
 
 	public Board() {
 		this(28, 31);
@@ -30,6 +29,19 @@ public class Board {
 			movePacman();
 		}
 		this.tickCount++;
+	}
+
+	public boolean checkIfPillsAreThere() {
+		for (int x = 0; x < this.width; x++) {
+			for (int y = 0; y < this.height; y++) {
+				for (final Object gameObject : findGameObjectsAndPacmanOn(x, y)) {
+					if (gameObject instanceof LittlePill) return true;
+				}
+//				if (((LittlePill) gameObject).isOnPosition(x, y)) return true;
+//				else return false;
+			}
+		}
+		return false;
 	}
 
 	public void movePacman() {

@@ -12,18 +12,27 @@ import com.qualitype.pacman.io.LevelDesign;
 
 public class Pacman {
 
-	private static final int SPEED = 250; // in ms
+	private static final int DEFAULT_SPEED = 250; // in ms
+	private static final int LAST_LEVEL = 3; // in ms
 
 	public static void main(String[] args) {
+		final Pacman pacman = new Pacman();
+		pacman.startGame();
+	}
+
+	private int currentLevel = 1;
+	int speed = DEFAULT_SPEED;
+
+	Board board;
+	BoardControl control;
+
+	public void startGame() {
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 
-		final LevelDesign design = new LevelDesign();
-		final Board[] board = {design.readLevel(Board.class.getResourceAsStream("Level-1.txt"))};
-
-		final BoardControl control = new BoardControl(shell, SWT.NONE);
-		control.setBoard(board[0]);
+		this.control = new BoardControl(shell, SWT.NONE);
+		loadLevel(1);
 
 		shell.addKeyListener(new KeyListener() {
 
@@ -34,17 +43,17 @@ public class Pacman {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (board[0].isGameOver()) {
+				if (Pacman.this.board.isGameOver()) {
 					if (e.keyCode == SWT.CR) {
-						board[0] = design.readLevel(Board.class.getResourceAsStream("Level-1.txt"));
-						control.setBoard(board[0]);
+						loadLevel(1);
+						Pacman.this.speed = DEFAULT_SPEED;
 					}
 					return;
 
 				}
 				final Direction inputDirection = Direction.forUserInput(e.character);
 				if (inputDirection != null) {
-					board[0].getPacman().setDirection(inputDirection);
+					Pacman.this.board.getPacman().setDirection(inputDirection);
 				}
 			}
 		});
@@ -57,11 +66,15 @@ public class Pacman {
 
 				while (!shell.isDisposed()) {
 					try {
-						Thread.sleep(SPEED / BoardControl.FRAMES);
+						Thread.sleep(Pacman.this.speed / BoardControl.FRAMES);
 						final long currentTickTime = System.currentTimeMillis();
-						board[0].tick(currentTickTime - lastTickTime);
-						control.incrementFrame();
+						Pacman.this.board.tick(currentTickTime - lastTickTime);
+						Pacman.this.control.incrementFrame();
 						refreshControl();
+
+						if (!Pacman.this.board.checkIfPillsAreThere()) {
+							loadNextLevel();
+						}
 						lastTickTime = currentTickTime;
 					} catch (final InterruptedException e1) {
 						e1.printStackTrace();
@@ -72,8 +85,8 @@ public class Pacman {
 			private void refreshControl() {
 				if (!display.isDisposed()) {
 					display.asyncExec(() -> {
-						if (!control.isDisposed()) {
-							control.redraw();
+						if (!Pacman.this.control.isDisposed()) {
+							Pacman.this.control.redraw();
 						}
 					});
 				}
@@ -89,5 +102,21 @@ public class Pacman {
 			}
 		}
 		display.dispose();
+	}
+
+	protected void loadNextLevel() {
+		if (this.currentLevel >= LAST_LEVEL) {
+			this.speed -= 20;
+			loadLevel(1);
+		} else {
+			loadLevel(this.currentLevel + 1);
+		}
+	}
+
+	protected void loadLevel(int level) {
+		final LevelDesign design = new LevelDesign();
+		this.board = design.readLevel(Board.class.getResourceAsStream("Level-" + level + ".txt"));
+		this.control.setBoard(this.board);
+		this.currentLevel = level;
 	}
 }

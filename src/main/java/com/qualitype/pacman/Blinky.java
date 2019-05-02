@@ -15,7 +15,8 @@ public class Blinky extends AbstractGhost {
 	@Override
 	public void tick(Board board, long timeTillLastTick) {
 		super.tick(board, timeTillLastTick);
-		if (this.tickCount % 5 == 0) {
+
+		if (this.tickCount % 7 == 0) {
 			final List<Direction> optimalDirections = new ArrayList<>(2);
 			if (board.pacman.getX() < this.x) {
 				optimalDirections.add(Direction.LEFT);
@@ -57,5 +58,4 @@ public class Blinky extends AbstractGhost {
 		}
 		this.tickCount++;
 	}
-
 }

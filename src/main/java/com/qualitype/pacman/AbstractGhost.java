@@ -6,6 +6,8 @@ public abstract class AbstractGhost implements GameObject {
 	long timer = 0;
 	int originX;
 	int originY;
+	boolean canEatGhosts = false;
+	GhostPlaceholder placeholder = new GhostPlaceholder(this);
 
 	public AbstractGhost(int x2, int y2) {
 		this.x = x2;
@@ -40,11 +42,14 @@ public abstract class AbstractGhost implements GameObject {
 	public boolean isOnPosition(int x, int y) {
 		return (this.x == x) && (this.y == y);
 	}
+	public boolean canEatGhosts() {
+		return this.canEatGhosts;
+	}
 
 	@Override
 	public void collide(Board board) {
 
-		if (board.canEatGhosts == false) {
+		if (this.canEatGhosts == false) {
 			if (board.pacman.life > 1) {
 				board.pacman.life--;
 				board.pacman.setPosition(1, 1);
@@ -52,10 +57,11 @@ public abstract class AbstractGhost implements GameObject {
 			} else {
 				board.setGameOver(true);
 			}
-		} else if (board.canEatGhosts == true) {
+		} else if (this.canEatGhosts == true) {
 			board.gameObjects.remove(this);
 			board.pacman.score += 400;
-			board.gameObjects.add(new GhostPlaceholder(this));
+			board.gameObjects.add(this.placeholder);
+			this.canEatGhosts = false;
 		}
 
 	}
@@ -73,18 +79,13 @@ public abstract class AbstractGhost implements GameObject {
 
 	@Override
 	public void tick(Board board, long timeTillLastTick) {
-		if (board.canEatGhosts == true) {
+		if (this.canEatGhosts == true) {
 			this.timer += timeTillLastTick;
 
-			if (this.timer >= 10000) {
-				board.canEatGhosts = false;
+			if (this.timer >= 8000) {
+				this.canEatGhosts = false;
 				this.timer = 0L;
 			}
-			//////
-//			if (board.showPlaceholder == true) {
-//				board.gameObjects.
-//			}
-			//////
 		}
 	}
 }
