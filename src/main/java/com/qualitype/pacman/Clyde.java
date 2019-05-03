@@ -10,6 +10,8 @@ public class Clyde extends AbstractGhost {
 
 	@Override
 	public void tick(Board board, long timeTillLastTick) {
+		if (board.gameOver) return;
+
 		super.tick(board, timeTillLastTick);
 		if (this.tickCount % 5 == 0) {
 			moveInDirection(board, Direction.random());

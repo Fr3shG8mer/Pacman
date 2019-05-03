@@ -25,6 +25,7 @@ public class Pacman {
 
 	Board board;
 	BoardControl control;
+	com.qualitype.pacman.Pacman pacman = new com.qualitype.pacman.Pacman();
 
 	public void startGame() {
 		final Display display = new Display();
@@ -45,8 +46,7 @@ public class Pacman {
 			public void keyPressed(KeyEvent e) {
 				if (Pacman.this.board.isGameOver()) {
 					if (e.keyCode == SWT.CR) {
-						loadLevel(1);
-						Pacman.this.speed = DEFAULT_SPEED;
+						loadFirstLevel();
 					}
 					return;
 
@@ -82,15 +82,6 @@ public class Pacman {
 				}
 			}
 
-			private void refreshControl() {
-				if (!display.isDisposed()) {
-					display.asyncExec(() -> {
-						if (!Pacman.this.control.isDisposed()) {
-							Pacman.this.control.redraw();
-						}
-					});
-				}
-			}
 		});
 		thread.start();
 
@@ -104,9 +95,25 @@ public class Pacman {
 		display.dispose();
 	}
 
+	void refreshControl() {
+		if (!this.control.isDisposed()) {
+			this.control.getDisplay().asyncExec(() -> {
+				if (!this.control.isDisposed()) {
+					this.control.redraw();
+				}
+			});
+		}
+	}
+
+	protected void loadFirstLevel() {
+		this.pacman = new com.qualitype.pacman.Pacman();
+		this.speed = DEFAULT_SPEED;
+		loadLevel(1);
+	}
+
 	protected void loadNextLevel() {
 		if (this.currentLevel >= LAST_LEVEL) {
-			this.speed -= 20;
+			this.speed -= 10;
 			loadLevel(1);
 		} else {
 			loadLevel(this.currentLevel + 1);
@@ -115,8 +122,10 @@ public class Pacman {
 
 	protected void loadLevel(int level) {
 		final LevelDesign design = new LevelDesign();
+		design.setPacman(this.pacman);
 		this.board = design.readLevel(Board.class.getResourceAsStream("Level-" + level + ".txt"));
 		this.control.setBoard(this.board);
+		refreshControl();
 		this.currentLevel = level;
 	}
 }

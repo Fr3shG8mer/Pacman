@@ -15,10 +15,13 @@ import com.qualitype.pacman.Inky;
 import com.qualitype.pacman.LittlePill;
 import com.qualitype.pacman.Obstacle;
 import com.qualitype.pacman.OrangePortal;
+import com.qualitype.pacman.Pacman;
 import com.qualitype.pacman.Pinky;
 import com.qualitype.pacman.PowerPellet;
 
 public class LevelDesign {
+
+	Pacman pacman = new Pacman();
 
 	private final OrangePortal[] existingPortals = new OrangePortal[10];
 
@@ -45,6 +48,7 @@ public class LevelDesign {
 		final int height = lines.length;
 		final int width = lines[0].length();
 		final Board result = new Board(width, height);
+		result.setPacman(this.pacman);
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -113,6 +117,14 @@ public class LevelDesign {
 				throw new IllegalArgumentException("Portal for character " + i + " is missing!");
 		}
 		return result;
+	}
+
+	public Pacman getPacman() {
+		return this.pacman;
+	}
+
+	public void setPacman(Pacman pacman) {
+		this.pacman = pacman;
 	}
 
 }

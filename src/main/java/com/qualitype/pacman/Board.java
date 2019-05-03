@@ -124,6 +124,10 @@ public class Board {
 		return this.pacman;
 	}
 
+	public void setPacman(Pacman pacman) {
+		this.pacman = pacman;
+	}
+
 	public int getWidth() {
 		return this.width;
 	}

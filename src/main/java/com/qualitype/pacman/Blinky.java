@@ -14,6 +14,8 @@ public class Blinky extends AbstractGhost {
 
 	@Override
 	public void tick(Board board, long timeTillLastTick) {
+		if (board.gameOver) return;
+
 		super.tick(board, timeTillLastTick);
 
 		if (this.tickCount % 7 == 0) {
