@@ -14,18 +14,28 @@ public class Inky extends AbstractGhost {
 		if (board.gameOver) return;
 
 		super.tick(board, timeTillLastTick);
-		if (this.tickCount % 5 == 0) {
-			int newX = this.lastDirection.getNextX(this.x);
-			int newY = this.lastDirection.getNextY(this.y);
-
-			while (!board.canMove(newX, newY)) {
-				this.lastDirection = Direction.random();
-				newX = this.lastDirection.getNextX(this.x);
-				newY = this.lastDirection.getNextY(this.y);
+		if (!this.canEatGhosts()) {
+			if (this.tickCount % 7 == 0) {
+				moveInky(board);
 			}
-
-			moveInDirection(board, this.lastDirection);
+		} else {
+			if (this.tickCount % 14 == 0) {
+				moveInky(board);
+			}
 		}
 		this.tickCount++;
+	}
+
+	public void moveInky(Board board) {
+		int newX = this.lastDirection.getNextX(this.x);
+		int newY = this.lastDirection.getNextY(this.y);
+
+		while (!board.canMove(newX, newY)) {
+			this.lastDirection = Direction.random();
+			newX = this.lastDirection.getNextX(this.x);
+			newY = this.lastDirection.getNextY(this.y);
+		}
+
+		moveInDirection(board, this.lastDirection);
 	}
 }

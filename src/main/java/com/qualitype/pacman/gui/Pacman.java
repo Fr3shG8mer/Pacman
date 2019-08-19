@@ -39,7 +39,7 @@ public class Pacman {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// ...
+				//
 			}
 
 			@Override

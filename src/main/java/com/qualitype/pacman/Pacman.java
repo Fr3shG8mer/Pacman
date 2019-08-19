@@ -2,10 +2,10 @@ package com.qualitype.pacman;
 
 public class Pacman {
 	int score = 0;
-	int x = 1; // Evtl. Änderung
-	int y = 1; // Evtl. Änderung
+	int x = 1;
+	int y = 1;
 	Direction direction = Direction.RIGHT;
-	int life = 3;
+	int life = 1;
 	public boolean isOnPosition(int x, int y) {
 		return (this.x == x) && (this.y == y);
 	}

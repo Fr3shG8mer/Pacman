@@ -13,8 +13,13 @@ public class Clyde extends AbstractGhost {
 		if (board.gameOver) return;
 
 		super.tick(board, timeTillLastTick);
-		if (this.tickCount % 5 == 0) {
-			moveInDirection(board, Direction.random());
+		if (!this.canEatGhosts()) {
+			if (this.tickCount % 5 == 0) {
+				moveInDirection(board, Direction.random());
+			}
+			if (this.tickCount % 10 == 0) {
+				moveInDirection(board, Direction.random());
+			}
 		}
 		this.tickCount++;
 	}

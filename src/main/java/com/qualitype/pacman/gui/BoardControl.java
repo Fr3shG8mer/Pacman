@@ -130,10 +130,6 @@ public class BoardControl extends Canvas {
 								gc.drawImage(this.pacman, WIDTH_TILE * direction.getNumber(), 0, WIDTH_FROM_SOURCE_TILE,
 										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
 							}
-//							if (!this.board.pacman.canMove(x, y)) {
-//								gc.drawImage(this.pacman, WIDTH_TILE * direction.getNumber(), 0, WIDTH_FROM_SOURCE_TILE,
-//										HEIGHT_FROM_SOURCE_TILE, tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
-//							}
 						}
 						// LittlePill
 						if (gameObject instanceof LittlePill) {
@@ -146,8 +142,6 @@ public class BoardControl extends Canvas {
 						// Obstacle
 						if (gameObject instanceof Obstacle) {
 							gc.drawImage(this.obstacle, tileX, tileY);
-//							gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_BLUE));
-//							gc.fillRectangle(tileX, tileY, WIDTH_TILE, HEIGHT_TILE);
 						}
 						// PowerPellet
 						if (gameObject instanceof PowerPellet) {

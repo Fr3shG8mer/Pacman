@@ -6,6 +6,6 @@ public interface GameObject {
 	boolean isSolid();
 
 	default void tick(Board board, long timeTillLastTick) {
-		// objects do nothing on default
+		//
 	}
 }

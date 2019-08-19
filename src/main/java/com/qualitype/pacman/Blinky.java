@@ -18,46 +18,56 @@ public class Blinky extends AbstractGhost {
 
 		super.tick(board, timeTillLastTick);
 
-		if (this.tickCount % 7 == 0) {
-			final List<Direction> optimalDirections = new ArrayList<>(2);
-			if (board.pacman.getX() < this.x) {
-				optimalDirections.add(Direction.LEFT);
+		if (!this.canEatGhosts()) {
+			if (this.tickCount % 7 == 0) {
+				moveBlinky(board);
 			}
-			if (board.pacman.getX() > this.x) {
-				optimalDirections.add(Direction.RIGHT);
+		} else {
+			if (this.tickCount % 14 == 0) {
+				moveBlinky(board);
 			}
-			if (board.pacman.getY() < this.y) {
-				optimalDirections.add(Direction.DOWN);
-			}
-			if (board.pacman.getY() > this.y) {
-				optimalDirections.add(Direction.UP);
-			}
+		}
+		this.tickCount++;
+	}
 
-			Direction newDirection = null;
+	public void moveBlinky(Board board) {
+		final List<Direction> optimalDirections = new ArrayList<>(2);
+		if (board.pacman.getX() < this.x) {
+			optimalDirections.add(Direction.LEFT);
+		}
+		if (board.pacman.getX() > this.x) {
+			optimalDirections.add(Direction.RIGHT);
+		}
+		if (board.pacman.getY() < this.y) {
+			optimalDirections.add(Direction.DOWN);
+		}
+		if (board.pacman.getY() > this.y) {
+			optimalDirections.add(Direction.UP);
+		}
 
-			for (final Direction optimalDirection : optimalDirections) {
-				final int newX = optimalDirection.getNextX(this.x);
-				final int newY = optimalDirection.getNextY(this.y);
+		Direction newDirection = null;
+
+		for (final Direction optimalDirection : optimalDirections) {
+			final int newX = optimalDirection.getNextX(this.x);
+			final int newY = optimalDirection.getNextY(this.y);
+			if (board.canMove(newX, newY)) {
+				newDirection = optimalDirection;
+				break;
+			}
+		}
+
+		if (newDirection == null) {
+			while (true) {
+				final Direction direction = Direction.random();
+				final int newX = direction.getNextX(this.x);
+				final int newY = direction.getNextY(this.y);
 				if (board.canMove(newX, newY)) {
-					newDirection = optimalDirection;
+					newDirection = direction;
 					break;
 				}
 			}
-
-			if (newDirection == null) {
-				while (true) {
-					final Direction direction = Direction.random();
-					final int newX = direction.getNextX(this.x);
-					final int newY = direction.getNextY(this.y);
-					if (board.canMove(newX, newY)) {
-						newDirection = direction;
-						break;
-					}
-				}
-			}
-			Objects.requireNonNull(newDirection, "Direction cannot be null at this point!");
-			moveInDirection(board, newDirection);
 		}
-		this.tickCount++;
+		Objects.requireNonNull(newDirection, "Direction cannot be null at this point!");
+		moveInDirection(board, newDirection);
 	}
 }

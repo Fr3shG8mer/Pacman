@@ -61,7 +61,6 @@ public abstract class AbstractGhost implements GameObject {
 			board.gameObjects.remove(this);
 			board.pacman.score += 400;
 			board.gameObjects.add(this.placeholder);
-			this.canEatGhosts = false;
 		}
 
 	}

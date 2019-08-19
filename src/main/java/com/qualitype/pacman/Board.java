@@ -37,8 +37,6 @@ public class Board {
 				for (final Object gameObject : findGameObjectsAndPacmanOn(x, y)) {
 					if (gameObject instanceof LittlePill) return true;
 				}
-//				if (((LittlePill) gameObject).isOnPosition(x, y)) return true;
-//				else return false;
 			}
 		}
 		return false;
