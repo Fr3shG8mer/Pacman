@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Pacman",
+            "request": "launch",
+            "mainClass": "com.qualitype.pacman.gui.Pacman",
+            "projectName": "pacman"
+        }
+    ]
+}
